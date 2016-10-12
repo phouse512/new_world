@@ -36,7 +36,7 @@ public class Tile {
         return this.y;
     }
 
-    public Integer getTiel() {
+    public Integer getTile() {
         return this.tile;
     }
 

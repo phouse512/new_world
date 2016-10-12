@@ -3,8 +3,8 @@ package com.phizzle.world;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
-import com.phizzle.world.objects.Tile;
-import com.phizzle.world.objects.World;
+import com.phizzle.world.objects.*;
+import com.phizzle.world.objects.Character;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,8 @@ public class GameService extends AbstractExecutionThreadService {
         final long timestep = 200;
         long startTime = System.currentTimeMillis();
         long lag = 0;
-        this.world
+        Character testChar = new Character("phouse512");
+        this.world.map[5][5].setCharacter(testChar);
 
         while(true) {
 
