@@ -1,3 +1,7 @@
 node_modules
 client/public/bundle.js
 server/game
+.idea/
+*.iml
+*.swp
+target
