@@ -3,8 +3,6 @@ package com.phizzle.world.objects;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by PhilipHouse on 10/12/16.
@@ -29,17 +27,6 @@ public class World {
     }
 
     public String serializeMap() {
-//        String toReturn = "{ map: ";
-//
-//        for (int y = 0; y < map.length; y++) {
-//
-//            for (int x = 0; x < map[y].length; x++) {
-//                String temp = "{ "
-//                toReturn += map[y][x].toString();
-//            }
-//        }
-//
-//        toReturn += "}"
         String toReturn = "";
 
         try {
@@ -49,5 +36,19 @@ public class World {
         }
 
         return toReturn;
+    }
+
+    public static Integer getYFromKey(String key) {
+        String[] test = key.split(",");
+        return Integer.valueOf(test[1]);
+    }
+
+    public static Integer getXFromKey(String key) {
+        String[] test = key.split(",");
+        return Integer.valueOf(test[0]);
+    }
+
+    public static String getHashKey(Integer x, Integer y) {
+        return x.toString() + "," + y.toString();
     }
 }

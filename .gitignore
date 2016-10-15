@@ -5,3 +5,4 @@ server/game
 *.iml
 *.swp
 target
+.DS_Store
