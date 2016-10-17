@@ -1,8 +1,14 @@
 package com.phizzle.world;
 
+import com.corundumstudio.socketio.AckRequest;
+import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.corundumstudio.socketio.listener.DataListener;
+import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
+import com.phizzle.world.controls.*;
+import com.phizzle.world.network.CommandPacket;
 import com.phizzle.world.network.DataPacket;
 import com.phizzle.world.objects.*;
 import com.phizzle.world.objects.Character;
@@ -20,6 +26,7 @@ public class GameService extends AbstractExecutionThreadService {
     private final SocketIOServer socketServer;
     private HashMap<UUID, Character> players;
     private HashMap<String, UUID> locationHash;
+    private HashMap<UUID, ArrayDeque<Command>> inputMap;
     public World world;
 
     @Inject
@@ -29,7 +36,7 @@ public class GameService extends AbstractExecutionThreadService {
 
         this.players = new HashMap<>();
         this.locationHash = new HashMap<>();
-
+        this.inputMap = new HashMap<>();
     }
 
     protected void run() {
@@ -44,6 +51,25 @@ public class GameService extends AbstractExecutionThreadService {
             newChar.y = y;
             this.players.put(test, newChar);
             this.locationHash.put(newPos, test);
+            this.inputMap.put(test, new ArrayDeque<>());
+        });
+
+        socketServer.addEventListener("command", CommandPacket.class, new DataListener<CommandPacket>() {
+            @Override
+            public void onData(SocketIOClient client, CommandPacket commandPacket, AckRequest ackRequest) throws Exception {
+                System.out.println("received command");
+                System.out.println(commandPacket);
+                UUID currentId = client.getSessionId();
+                if (commandPacket.command.equals("right")) {
+                    inputMap.get(currentId).push(new MoveRightCommand());
+                } else if (commandPacket.command.equals("left")) {
+                    inputMap.get(currentId).push(new MoveLeftCommand());
+                } else if (commandPacket.command.equals("up")) {
+                    inputMap.get(currentId).push(new MoveUpCommand());
+                } else if (commandPacket.command.equals("down")) {
+                    inputMap.get(currentId).push(new MoveDownCommand());
+                }
+            }
         });
 
         final long timestep = 200;
@@ -59,6 +85,7 @@ public class GameService extends AbstractExecutionThreadService {
             while(lag >= timestep) {
                 lag -= timestep;
                 System.out.println("F YEAH");
+                processInputs();
                 socketServer.getBroadcastOperations().sendEvent("chats",
                         new DataPacket(this.world, this.players).serialize());
             }
@@ -81,6 +108,17 @@ public class GameService extends AbstractExecutionThreadService {
         }
 
         return key;
+    }
+
+    private void processInputs() {
+        for (HashMap.Entry<UUID, ArrayDeque<Command>> user : inputMap.entrySet()) {
+            Character player = players.get(user.getKey());
+            if (!user.getValue().isEmpty()) {
+                System.out.println("in here");
+                Command command = user.getValue().pop();
+                command.execute(world, players, locationHash, user.getKey());
+            }
+        }
     }
 
     private static String getRandomName() {

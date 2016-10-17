@@ -14,7 +14,10 @@ var BottomLeftTexture = PIXI.Texture.fromImage("assets/grass-bottom-left.png");
 var BottomRightTexture = PIXI.Texture.fromImage("assets/grass-bottom-right.png");
 var TopRightTexture = PIXI.Texture.fromImage("assets/grass-top-right.png");
 
-var StandingTexture = PIXI.Texture.fromImage("assets/standing.png");
+var FacingDownTex = PIXI.Texture.fromImage("assets/down.png");
+var FacingLeftTex = PIXI.Texture.fromImage("assets/left.png");
+var FacingUpTex = PIXI.Texture.fromImage("assets/up.png");
+var FacingRightTex = PIXI.Texture.fromImage("assets/right.png");
 
 var mapTiles = null;
 var players = {};
@@ -66,23 +69,41 @@ function renderPlayers(playerMap) {
 
     for (var key in playerMap) {
         if (playerMap.hasOwnProperty(key)) {
-            console.log(playerMap[key]);
-
+            
             if(!(key in players)) {
                 // this is a new player!!
-                playerSprite = new PIXI.Sprite(StandingTexture);
+                playerSprite = new PIXI.Sprite(choosePlayerSprite(playerMap[key].direction));
                 playerSprite.scale.x = 2;
                 playerSprite.scale.y = 2;
                 playerSprite.x = playerMap[key].x * constants.tileSize;
                 playerSprite.y = playerMap[key].y * constants.tileSize;
                 stage.addChild(playerSprite);
+                console.log(playerMap[key]);
                 players[key] = playerSprite;
             } else { // this player exists!! find existing sprite and edit that
                 existingSprite = players[key];
+                existingSprite.texture = choosePlayerSprite(playerMap[key].direction);
                 existingSprite.x = playerMap[key].x * constants.tileSize;
                 existingSprite.y = playerMap[key].y * constants.tileSize;
             }
         }
+    }
+}
+
+function animatePlayer(clientSprite, serverSprite) {
+    console.log('animation');
+}
+
+function choosePlayerSprite(direction) {
+    switch(direction) {
+        case "SOUTH":
+            return FacingDownTex;
+        case "NORTH":
+            return FacingUpTex;
+        case "EAST":
+            return FacingRightTex;
+        default:
+            return FacingLeftTex;
     }
 }
 

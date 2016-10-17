@@ -10,14 +10,13 @@ public class Character {
     public String name;
     public Integer x;
     public Integer y;
+    public CharacterDirection direction;
 
     @JsonIgnore
     public Integer skin;
 
-    @JsonIgnore
-    public Integer direction;
-
     public Character(String name) {
         this.name = name;
+        this.direction = CharacterDirection.WEST;
     }
 }

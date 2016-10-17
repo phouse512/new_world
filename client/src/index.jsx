@@ -2,16 +2,19 @@ var $ = require('jquery');
 
 var socket = require('./sockets');
 var render = require('./render');
+var keyboard = require('./keyboard');
 var map = 0;
 var players = {};
 
 $(document).ready(function() {
-    console.log(socket);
     var test = socket.setup();
-    console.log(test);
     render.setup();
-    //render.sprites();
     render.animate();
+    keyboard.setupKeyboard(test);
+
+    test.on('connect', function() {
+        console.log("this is it: " + test.io.engine.id);
+    });
 
     test.on('disconnect', function(){
         console.log('disconnect');
@@ -35,10 +38,11 @@ $(document).ready(function() {
         }
         
         render.renderPlayers(temp.playerMap);
-        console.log(temp.playerMap);
         map = temp.world.map;
         players = temp.playerMap;
 
     });
 
 })
+
+window.test = socket;
