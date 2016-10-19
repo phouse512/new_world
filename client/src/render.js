@@ -1,5 +1,6 @@
 var PIXI = require('pixi.js');
 var constants = require('./constants');
+var PlayerSprite = require('./sprite.jsx');
 
 // pixi global variables
 var stage = null;
@@ -29,6 +30,10 @@ function initializePIXI() {
 
     stage = new PIXI.Container();
     renderer.render(stage);
+
+
+    var testPlayer = new PlayerSprite(1, 23, 15);
+    console.log(testPlayer.getX());
 }
     
 function setupMap(map) {
