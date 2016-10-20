@@ -22,6 +22,8 @@ $(document).ready(function() {
     });
 
     test.on('chats', function(data) {
+        JSON.parse(data);
+        var temp = 0;
         try {
             temp = JSON.parse(data);
         } catch(err) {

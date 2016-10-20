@@ -1,5 +1,6 @@
 var PIXI = require('pixi.js');
 var constants = require('./constants');
+console.log('come on man');
 var PlayerSprite = require('./sprite.jsx');
 
 // pixi global variables
@@ -31,9 +32,6 @@ function initializePIXI() {
     stage = new PIXI.Container();
     renderer.render(stage);
 
-
-    var testPlayer = new PlayerSprite(1, 23, 15);
-    console.log(testPlayer.getX());
 }
     
 function setupMap(map) {
@@ -42,7 +40,7 @@ function setupMap(map) {
         mapTiles.push([]);
         mapTiles[y].push(new Array(constants.width));
         for (var x = 0; x<constants.width; x++) {
-            tempSprite = new PIXI.Sprite(MiddleTexture);
+            var tempSprite = new PIXI.Sprite(MiddleTexture);
             tempSprite.scale.x = 2;
             tempSprite.scale.y = 2;
             tempSprite.x = x * constants.tileSize;
@@ -77,19 +75,31 @@ function renderPlayers(playerMap) {
             
             if(!(key in players)) {
                 // this is a new player!!
-                playerSprite = new PIXI.Sprite(choosePlayerSprite(playerMap[key].direction));
-                playerSprite.scale.x = 2;
-                playerSprite.scale.y = 2;
-                playerSprite.x = playerMap[key].x * constants.tileSize;
-                playerSprite.y = playerMap[key].y * constants.tileSize;
-                stage.addChild(playerSprite);
-                console.log(playerMap[key]);
-                players[key] = playerSprite;
+                //playerSprite = new PIXI.Sprite(choosePlayerSprite(playerMap[key].direction));
+                //playerSprite.scale.x = 2;
+                //playerSprite.scale.y = 2;
+                //playerSprite.x = playerMap[key].x * constants.tileSize;
+                //playerSprite.y = playerMap[key].y * constants.tileSize;
+                //stage.addChild(playerSprite);
+                //console.log(playerMap[key]);
+                //players[key] = playerSprite;
+
+                // add new pixi player sprite
+                var tempSprite = new PIXI.Sprite(choosePlayerSprite(playerMap[key].direction));
+                console.log(tempSprite);
+                console.log(" ARGHS");
+                var newSprite = new PlayerSprite(playerMap[key].x, playerMap[key].x, constants.tileSize, tempSprite);
+
+                stage.addChild(newSprite.getPixiSprite());
+                players[key] = newSprite;
             } else { // this player exists!! find existing sprite and edit that
-                existingSprite = players[key];
-                existingSprite.texture = choosePlayerSprite(playerMap[key].direction);
-                existingSprite.x = playerMap[key].x * constants.tileSize;
-                existingSprite.y = playerMap[key].y * constants.tileSize;
+                console.log('here');
+                var existingSprite = players[key];
+                existingSprite.setPixiTexture(choosePlayerSprite(playerMap[key].direction));
+
+                existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
+//                existingSprite.x = playerMap[key].x * constants.tileSize;
+//                existingSprite.y = playerMap[key].y * constants.tileSize;
             }
         }
     }
