@@ -75,35 +75,53 @@ function renderPlayers(playerMap) {
             
             if(!(key in players)) {
                 // this is a new player!!
-                //playerSprite = new PIXI.Sprite(choosePlayerSprite(playerMap[key].direction));
-                //playerSprite.scale.x = 2;
-                //playerSprite.scale.y = 2;
-                //playerSprite.x = playerMap[key].x * constants.tileSize;
-                //playerSprite.y = playerMap[key].y * constants.tileSize;
-                //stage.addChild(playerSprite);
-                //console.log(playerMap[key]);
-                //players[key] = playerSprite;
-
                 // add new pixi player sprite
                 var tempSprite = new PIXI.Sprite(choosePlayerSprite(playerMap[key].direction));
-                console.log(tempSprite);
-                console.log(" ARGHS");
-                var newSprite = new PlayerSprite(playerMap[key].x, playerMap[key].x, constants.tileSize, tempSprite);
+                var newSprite = new PlayerSprite(playerMap[key].x, playerMap[key].y, constants.tileSize, tempSprite);
 
                 stage.addChild(newSprite.getPixiSprite());
                 players[key] = newSprite;
             } else { // this player exists!! find existing sprite and edit that
-                console.log('here');
                 var existingSprite = players[key];
-                existingSprite.setPixiTexture(choosePlayerSprite(playerMap[key].direction));
 
-                existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
-//                existingSprite.x = playerMap[key].x * constants.tileSize;
-//                existingSprite.y = playerMap[key].y * constants.tileSize;
+                // this is old simple logic that doesn't do any interpolating
+                // existingSprite.setPixiTexture(choosePlayerSprite(playerMap[key].direction));
+                // existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
+
+
+                // testbed for new code that interpolates
+                currentCoordinates = existingSprite.getPixelPosition();
+                console.log(currentCoordinates);
+                console.log("x: " + playerMap[key].x + " y: " + playerMap[key].y);
+                if ((currentCoordinates[0] == (playerMap[key].x * constants.tileSize * 2)) &&
+                        (currentCoordinates[1] == (playerMap[key].y * constants.tileSize * 2))) {
+                    // the server position is the same as the current sprite,
+                    // this is the sane case where there is no work to be done
+                    // :) 
+                    console.log('existing sprite don\'t need no movement');
+                } else {
+                    console.log('there is some mismatch here');
+                    // psyche they're different, get to work son
+
+                    // we need to check the player sprite object's control
+                    // array - if this command is in there, the sprite is in
+                    // the middle of animating, let it be. Otherwise we have to
+                    // add it to the end of the array to be processed
+                    server_command = { x: playerMap[key].x, y: playerMap[key].y };
+                    if (existingSprite.getControls().length < 1) {
+                        existingSprite.addCommand(server_command);
+                    } else if (existingSprite.getControls()[0] != server_command) {
+                        existingSprite.addCommand(server_command);
+                    }
+                }
+
+                //existingSprite.processTick();
             }
         }
     }
 }
+
+
 
 function animatePlayer(clientSprite, serverSprite) {
     console.log('animation');
@@ -160,6 +178,13 @@ function renderGameState(mapObj) {
 
 function animate() {
     requestAnimationFrame(animate);
+
+    for (var key in players) {
+        if (players.hasOwnProperty(key)) {
+            players[key].processTick();
+        
+        }
+    }
     renderer.render(stage);
 }
 

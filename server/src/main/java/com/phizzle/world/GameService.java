@@ -117,6 +117,7 @@ public class GameService extends AbstractExecutionThreadService {
                 System.out.println("in here");
                 Command command = user.getValue().pop();
                 command.execute(world, players, locationHash, user.getKey());
+                System.out.println("x: " + player.x + " y: " + player.y);
             }
         }
     }
