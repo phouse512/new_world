@@ -1,5 +1,5 @@
 class PlayerSprite {
-    constructor(x, y, tileSize, pixiSprite) {
+    constructor(x, y, tileSize, pixiSprite, direction) {
         console.log("player sprite constructor");
         this.x = x;
         this.y = y;
@@ -13,6 +13,8 @@ class PlayerSprite {
         this.pixiSprite.scale.y = 2;
         this.pixiSprite.x = x * tileSize;
         this.pixiSprite.y = y * tileSize;
+
+        this.direction = direction;
     }
 
     getX() {
@@ -24,7 +26,7 @@ class PlayerSprite {
     }
 
     getPixelPosition() {
-        return [this.pixiSprite.x, this.pixiSprite.y];
+        return [this.pixiSprite.x, this.pixiSprite.y, this.direction];
     }
 
     setPixiTexture(newTexture){
@@ -86,6 +88,8 @@ class PlayerSprite {
         // actually apply the new position
         this.pixiSprite.x += xDelta;
         this.pixiSprite.y += yDelta;
+        this.pixiSprite.texture = nextControl.directionTex;
+        this.pixiSprite.direction = nextControl.direction;
 
         if (this.pixiSprite.x == (nextControl.x * this.tileSize) &&
                 this.pixiSprite.y == (nextControl.y * this.tileSize)) {

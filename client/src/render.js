@@ -77,7 +77,8 @@ function renderPlayers(playerMap) {
                 // this is a new player!!
                 // add new pixi player sprite
                 var tempSprite = new PIXI.Sprite(choosePlayerSprite(playerMap[key].direction));
-                var newSprite = new PlayerSprite(playerMap[key].x, playerMap[key].y, constants.tileSize, tempSprite);
+                var newSprite = new PlayerSprite(playerMap[key].x, playerMap[key].y, constants.tileSize,
+                        tempSprite, playerMap[key].direction);
 
                 stage.addChild(newSprite.getPixiSprite());
                 players[key] = newSprite;
@@ -94,7 +95,8 @@ function renderPlayers(playerMap) {
                 console.log(currentCoordinates);
                 console.log("x: " + playerMap[key].x + " y: " + playerMap[key].y);
                 if ((currentCoordinates[0] == (playerMap[key].x * constants.tileSize * 2)) &&
-                        (currentCoordinates[1] == (playerMap[key].y * constants.tileSize * 2))) {
+                        (currentCoordinates[1] == (playerMap[key].y * constants.tileSize * 2)) &&
+                        (currentCoordinates[2] == playerMap[key].direction)) {
                     // the server position is the same as the current sprite,
                     // this is the sane case where there is no work to be done
                     // :) 
@@ -107,7 +109,9 @@ function renderPlayers(playerMap) {
                     // array - if this command is in there, the sprite is in
                     // the middle of animating, let it be. Otherwise we have to
                     // add it to the end of the array to be processed
-                    server_command = { x: playerMap[key].x, y: playerMap[key].y };
+                    server_command = { x: playerMap[key].x, y: playerMap[key].y, 
+                        directionTex: choosePlayerSprite(playerMap[key].direction),
+                        direction: playerMap[key].direction };
                     if (existingSprite.getControls().length < 1) {
                         existingSprite.addCommand(server_command);
                     } else if (existingSprite.getControls()[0] != server_command) {
