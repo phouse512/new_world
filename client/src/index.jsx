@@ -5,6 +5,7 @@ var render = require('./render');
 var keyboard = require('./keyboard');
 var map = 0;
 var players = {};
+var playerSprites = {};
 
 $(document).ready(function() {
     var test = socket.setup();

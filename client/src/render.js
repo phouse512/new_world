@@ -93,9 +93,9 @@ function renderPlayers(playerMap) {
                 // testbed for new code that interpolates
                 currentCoordinates = existingSprite.getPixelPosition();
                 console.log(currentCoordinates);
-                console.log("x: " + playerMap[key].x + " y: " + playerMap[key].y);
-                if ((currentCoordinates[0] == (playerMap[key].x * constants.tileSize * 2)) &&
-                        (currentCoordinates[1] == (playerMap[key].y * constants.tileSize * 2)) &&
+                console.log("x: " + playerMap[key].x + " y: " + playerMap[key].y + " dir: " + playerMap[key].direction);
+                if ((currentCoordinates[0] == (playerMap[key].x * constants.tileSize)) &&
+                        (currentCoordinates[1] == (playerMap[key].y * constants.tileSize)) &&
                         (currentCoordinates[2] == playerMap[key].direction)) {
                     // the server position is the same as the current sprite,
                     // this is the sane case where there is no work to be done
@@ -198,5 +198,9 @@ module.exports = {
     sprites: setupSprites,
     animate: animate,
     renderGameState: renderGameState,
-    renderPlayers: renderPlayers
+    renderPlayers: renderPlayers,
 }
+
+window.new_world = {
+    players: players
+};

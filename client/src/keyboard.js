@@ -12,7 +12,6 @@ function setupKeyboard(socketDep) {
 function keyboardPress(event) {
     if(event.keyCode == 39) {
         console.log('right arrow press');
-        console.log(socket);
         socket.emit("command", { clientId: socket.io.engine.id, command: 'right'});
     } else if (event.keyCode == 38) {
         socket.emit("command", { clientId: socket.io.engine.id, command: 'up'});

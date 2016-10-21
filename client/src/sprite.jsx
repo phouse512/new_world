@@ -58,9 +58,9 @@ class PlayerSprite {
         if (this.controlArray.length < 1) {
             return;
         }
-        console.log('there is something legit to process');
+        //console.log('there is something legit to process');
         var nextControl = this.controlArray[0];
-        console.log(nextControl);
+        //console.log(nextControl);
         var toX = nextControl.x * this.tileSize;
         var toY = nextControl.y * this.tileSize;
 
@@ -82,17 +82,19 @@ class PlayerSprite {
             yDelta -= 10;
         }
 
-        console.log('xdelta: ' + xDelta);
-        console.log('ydelta: ' + yDelta);
+        //console.log('xdelta: ' + xDelta);
+        //console.log('ydelta: ' + yDelta);
 
         // actually apply the new position
         this.pixiSprite.x += xDelta;
         this.pixiSprite.y += yDelta;
         this.pixiSprite.texture = nextControl.directionTex;
-        this.pixiSprite.direction = nextControl.direction;
+        this.direction = nextControl.direction;
 
         if (this.pixiSprite.x == (nextControl.x * this.tileSize) &&
                 this.pixiSprite.y == (nextControl.y * this.tileSize)) {
+            this.x = nextControl.x;
+            this.y = nextControl.y;
             this.controlArray.shift();
         }
         // if equal, pop off
