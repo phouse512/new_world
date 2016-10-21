@@ -28,6 +28,7 @@ public class GameService extends AbstractExecutionThreadService {
     private HashMap<String, UUID> locationHash;
     private HashMap<UUID, ArrayDeque<Command>> inputMap;
     public World world;
+    public Integer debugger;
 
     @Inject
     public GameService(SocketIOServer socketIOServer) {
@@ -37,6 +38,7 @@ public class GameService extends AbstractExecutionThreadService {
         this.players = new HashMap<>();
         this.locationHash = new HashMap<>();
         this.inputMap = new HashMap<>();
+        this.debugger = 0;
     }
 
     protected void run() {
@@ -60,14 +62,15 @@ public class GameService extends AbstractExecutionThreadService {
                 System.out.println("received command");
                 System.out.println(commandPacket);
                 UUID currentId = client.getSessionId();
+                Integer sequence = commandPacket.sequence;
                 if (commandPacket.command.equals("right")) {
-                    inputMap.get(currentId).push(new MoveRightCommand());
+                    inputMap.get(currentId).push(new MoveRightCommand(sequence));
                 } else if (commandPacket.command.equals("left")) {
-                    inputMap.get(currentId).push(new MoveLeftCommand());
+                    inputMap.get(currentId).push(new MoveLeftCommand(sequence));
                 } else if (commandPacket.command.equals("up")) {
-                    inputMap.get(currentId).push(new MoveUpCommand());
+                    inputMap.get(currentId).push(new MoveUpCommand(sequence));
                 } else if (commandPacket.command.equals("down")) {
-                    inputMap.get(currentId).push(new MoveDownCommand());
+                    inputMap.get(currentId).push(new MoveDownCommand(sequence));
                 }
             }
         });
@@ -117,7 +120,10 @@ public class GameService extends AbstractExecutionThreadService {
                 System.out.println("in here");
                 Command command = user.getValue().pop();
                 command.execute(world, players, locationHash, user.getKey());
+                System.out.println("Set new sequence to: " + player.sequence);
                 System.out.println("x: " + player.x + " y: " + player.y);
+                this.debugger += 1;
+                System.out.println("PROCESSED: " + this.debugger + " INPUTS");
             }
         }
     }

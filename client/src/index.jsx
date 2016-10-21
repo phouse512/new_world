@@ -36,7 +36,6 @@ $(document).ready(function() {
             render.setupMap(temp.world.map);
             console.log("should log once");
         } else {
-            console.log("should log pretty often");
             render.renderGameState(temp.world.map);
         }
         

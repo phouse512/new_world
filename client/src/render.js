@@ -84,40 +84,51 @@ function renderPlayers(playerMap) {
                 players[key] = newSprite;
             } else { // this player exists!! find existing sprite and edit that
                 var existingSprite = players[key];
-
+               
+                console.log('local seq: ' + existingSprite.getSeq() + ' server seq: ' + playerMap[key].sequence);
+                if ((existingSprite.getSeq() == playerMap[key].sequence) && (existingSprite.getControls().length < 1) && (((new Date).getTime() - existingSprite.last_action) > 700)) {
+                    console.log('WARNING WARNING WARNING WARNING');
+                    // at this point, the client has nothing left to process,
+                    // set position to server. Unless they are hacking, this
+                    // should be FINE!
+                    existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
+                } else if (playerMap[key].sequence > existingSprite.getSeq()) {
+                    command = { x: playerMap[key].x, y: playerMap[key].y, sequence: playerMap[key].sequence,
+                        direction: playerMap[key].direction, directionTex: choosePlayerSprite(playerMap[key].direction) };
+                    existingSprite.addCommand(command);
+                }
                 // this is old simple logic that doesn't do any interpolating
                 // existingSprite.setPixiTexture(choosePlayerSprite(playerMap[key].direction));
                 // existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
 
 
                 // testbed for new code that interpolates
-                currentCoordinates = existingSprite.getPixelPosition();
-                console.log(currentCoordinates);
-                console.log("x: " + playerMap[key].x + " y: " + playerMap[key].y + " dir: " + playerMap[key].direction);
-                if ((currentCoordinates[0] == (playerMap[key].x * constants.tileSize)) &&
-                        (currentCoordinates[1] == (playerMap[key].y * constants.tileSize)) &&
-                        (currentCoordinates[2] == playerMap[key].direction)) {
+                //currentCoordinates = existingSprite.getPixelPosition();
+                //console.log(currentCoordinates);
+                //console.log("x: " + playerMap[key].x + " y: " + playerMap[key].y + " dir: " + playerMap[key].direction);
+                //if ((currentCoordinates[0] == (playerMap[key].x * constants.tileSize)) &&
+                //        (currentCoordinates[1] == (playerMap[key].y * constants.tileSize)) &&
+                //        (currentCoordinates[2] == playerMap[key].direction)) {
                     // the server position is the same as the current sprite,
                     // this is the sane case where there is no work to be done
                     // :) 
-                    console.log('existing sprite don\'t need no movement');
-                } else {
-                    console.log('there is some mismatch here');
+                    //console.log('existing sprite don\'t need no movement');
+                //} else {
+                    //console.log('there is some mismatch here');
                     // psyche they're different, get to work son
 
                     // we need to check the player sprite object's control
                     // array - if this command is in there, the sprite is in
                     // the middle of animating, let it be. Otherwise we have to
                     // add it to the end of the array to be processed
-                    server_command = { x: playerMap[key].x, y: playerMap[key].y, 
-                        directionTex: choosePlayerSprite(playerMap[key].direction),
-                        direction: playerMap[key].direction };
-                    if (existingSprite.getControls().length < 1) {
-                        existingSprite.addCommand(server_command);
-                    } else if (existingSprite.getControls()[0] != server_command) {
-                        existingSprite.addCommand(server_command);
-                    }
-                }
+//                    server_command = { x: playerMap[key].x, y: playerMap[key].y, 
+//                        directionTex: choosePlayerSprite(playerMap[key].direction),
+//                        direction: playerMap[key].direction };
+//                    if (existingSprite.getControls().length < 1) {
+//                        existingSprite.addCommand(server_command);
+//                    } else if (existingSprite.getControls()[0] != server_command) {
+//                        existingSprite.addCommand(server_command);
+//                    }
 
                 //existingSprite.processTick();
             }
@@ -186,7 +197,6 @@ function animate() {
     for (var key in players) {
         if (players.hasOwnProperty(key)) {
             players[key].processTick();
-        
         }
     }
     renderer.render(stage);
@@ -199,8 +209,9 @@ module.exports = {
     animate: animate,
     renderGameState: renderGameState,
     renderPlayers: renderPlayers,
+    players: players,
+    choosePlayerSprite: choosePlayerSprite
 }
 
-window.new_world = {
-    players: players
-};
+window.choosePlayerSprite = choosePlayerSprite;
+window.all_players = players;

@@ -11,6 +11,12 @@ import java.util.UUID;
  */
 public class MoveDownCommand implements Command {
 
+    public Integer sequence;
+
+    public MoveDownCommand(Integer sequence) {
+        this.sequence = sequence;
+    }
+
     public void execute(World world, HashMap<UUID, Character> playerMap,
                         HashMap<String, UUID> locationMap,
                         UUID player) {
@@ -23,6 +29,8 @@ public class MoveDownCommand implements Command {
         // don't move the player, just change direction
         if (currChar.direction != CharacterDirection.SOUTH) {
             currChar.direction = CharacterDirection.SOUTH;
+            if (this.sequence > currChar.sequence)
+                currChar.sequence = this.sequence;
             return;
         }
 
@@ -47,7 +55,8 @@ public class MoveDownCommand implements Command {
 
         currChar.x = potX;
         currChar.y = potY;
-        String newKey = World.getHashKey(potX, potY);
+        if (this.sequence > currChar.sequence)
+            currChar.sequence = this.sequence;        String newKey = World.getHashKey(potX, potY);
         locationMap.remove(oldKey);
         locationMap.put(newKey, player);
     }

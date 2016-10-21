@@ -1,4 +1,5 @@
 class PlayerSprite {
+
     constructor(x, y, tileSize, pixiSprite, direction) {
         console.log("player sprite constructor");
         this.x = x;
@@ -15,6 +16,8 @@ class PlayerSprite {
         this.pixiSprite.y = y * tileSize;
 
         this.direction = direction;
+        this.sequence = 0;
+        this.last_action = (new Date).getTime();
     }
 
     getX() {
@@ -23,6 +26,14 @@ class PlayerSprite {
 
     getY() {
         return this.y;
+    }
+
+    incSeq() {
+        this.sequence += 1;
+    }
+
+    getSeq() {
+        return this.sequence;
     }
 
     getPixelPosition() {
@@ -70,16 +81,18 @@ class PlayerSprite {
         var xDelta = 0;
         var yDelta = 0;
 
+        var changeSize = 2;
+
         if (diffX > 0) {
-            xDelta += 10;
+            xDelta += changeSize;
         } else if (diffX < 0) {
-            xDelta -= 10;
+            xDelta -= changeSize;
         }
 
         if (diffY > 0) {
-            yDelta += 10;
+            yDelta += changeSize;
         } else if (diffY < 0) {
-            yDelta -= 10;
+            yDelta -= changeSize;
         }
 
         //console.log('xdelta: ' + xDelta);
@@ -96,6 +109,7 @@ class PlayerSprite {
             this.x = nextControl.x;
             this.y = nextControl.y;
             this.controlArray.shift();
+            this.last_action = (new Date).getTime();
         }
         // if equal, pop off
     }

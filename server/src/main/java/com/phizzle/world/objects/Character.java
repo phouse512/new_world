@@ -11,6 +11,7 @@ public class Character {
     public Integer x;
     public Integer y;
     public CharacterDirection direction;
+    public Integer sequence;
 
     @JsonIgnore
     public Integer skin;
@@ -18,5 +19,6 @@ public class Character {
     public Character(String name) {
         this.name = name;
         this.direction = CharacterDirection.WEST;
+        this.sequence = 0;
     }
 }

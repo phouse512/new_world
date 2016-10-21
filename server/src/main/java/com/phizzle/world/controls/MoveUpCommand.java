@@ -11,6 +11,12 @@ import java.util.UUID;
  */
 public class MoveUpCommand implements Command {
 
+    public Integer sequence;
+
+    public MoveUpCommand(Integer sequence) {
+        this.sequence = sequence;
+    }
+
     public void execute(World world, HashMap<UUID, Character> playerMap,
                         HashMap<String, UUID> locationMap,
                         UUID player) {
@@ -23,6 +29,10 @@ public class MoveUpCommand implements Command {
         // don't move the player, just change direction
         if (currChar.direction != CharacterDirection.NORTH) {
             currChar.direction = CharacterDirection.NORTH;
+
+            if (this.sequence > currChar.sequence)
+                currChar.sequence = this.sequence;
+
             return;
         }
 
@@ -47,6 +57,8 @@ public class MoveUpCommand implements Command {
 
         currChar.x = potX;
         currChar.y = potY;
+        if (this.sequence > currChar.sequence)
+            currChar.sequence = this.sequence;
         String newKey = World.getHashKey(potX, potY);
         locationMap.remove(oldKey);
         locationMap.put(newKey, player);

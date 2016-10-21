@@ -9,4 +9,5 @@ public class CommandPacket {
 
     public String clientId;
     public String command;
+    public Integer sequence;
 }
