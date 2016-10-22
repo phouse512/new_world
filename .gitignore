@@ -6,3 +6,4 @@ server/game
 *.swp
 target
 .DS_Store
+client/public/bundle.js.map
