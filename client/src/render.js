@@ -69,6 +69,18 @@ function setupSprites() {
 }
 
 function renderPlayers(playerMap) {
+    
+
+    //delete old characters
+    for (var key in players) {
+        if (players.hasOwnProperty(key)) {
+            if (!(key in playerMap)) {
+                // this player is deleted off the server
+                stage.removeChild(players[key].pixiSprite);
+                delete players[key];
+            }
+        }
+    }
 
     for (var key in playerMap) {
         if (playerMap.hasOwnProperty(key)) {
@@ -93,50 +105,11 @@ function renderPlayers(playerMap) {
                     // should be FINE!
                     existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
                 } else if (playerMap[key].sequence > existingSprite.getSeq()) {
-                    //existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
-
-                    //existingSprite.setDirection(playerMap[key].direction, choosePlayerSprite(playerMap[key].direction));
-                    // work on looping through and generating diffs
-                    var done = false;
                     diffX = playerMap[key].x - existingSprite.x;
                     diffY = playerMap[key].y - existingSprite.y;
 
                     existingSprite.addCommand({ x: diffX, y: diffY, direction: playerMap[key].direction, directionTex: choosePlayerSprite(playerMap[key].direction) });
                 }
-                // this is old simple logic that doesn't do any interpolating
-                // existingSprite.setPixiTexture(choosePlayerSprite(playerMap[key].direction));
-                // existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
-
-
-                // testbed for new code that interpolates
-                //currentCoordinates = existingSprite.getPixelPosition();
-                //console.log(currentCoordinates);
-                //console.log("x: " + playerMap[key].x + " y: " + playerMap[key].y + " dir: " + playerMap[key].direction);
-                //if ((currentCoordinates[0] == (playerMap[key].x * constants.tileSize)) &&
-                //        (currentCoordinates[1] == (playerMap[key].y * constants.tileSize)) &&
-                //        (currentCoordinates[2] == playerMap[key].direction)) {
-                    // the server position is the same as the current sprite,
-                    // this is the sane case where there is no work to be done
-                    // :) 
-                    //console.log('existing sprite don\'t need no movement');
-                //} else {
-                    //console.log('there is some mismatch here');
-                    // psyche they're different, get to work son
-
-                    // we need to check the player sprite object's control
-                    // array - if this command is in there, the sprite is in
-                    // the middle of animating, let it be. Otherwise we have to
-                    // add it to the end of the array to be processed
-//                    server_command = { x: playerMap[key].x, y: playerMap[key].y, 
-//                        directionTex: choosePlayerSprite(playerMap[key].direction),
-//                        direction: playerMap[key].direction };
-//                    if (existingSprite.getControls().length < 1) {
-//                        existingSprite.addCommand(server_command);
-//                    } else if (existingSprite.getControls()[0] != server_command) {
-//                        existingSprite.addCommand(server_command);
-//                    }
-
-                //existingSprite.processTick();
             }
         }
     }

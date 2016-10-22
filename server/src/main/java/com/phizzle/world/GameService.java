@@ -56,6 +56,17 @@ public class GameService extends AbstractExecutionThreadService {
             this.inputMap.put(test, new ArrayDeque<>());
         });
 
+        socketServer.addDisconnectListener( (client) -> {
+            System.out.println("removing existing player");
+            UUID user = client.getSessionId();
+
+            Character existingChar = this.players.get(user);
+            String locKey = World.getHashKey(existingChar.x, existingChar.y);
+            this.locationHash.remove(locKey);
+            this.inputMap.remove(user);
+            this.players.remove(user);
+        });
+
         socketServer.addEventListener("command", CommandPacket.class, new DataListener<CommandPacket>() {
             @Override
             public void onData(SocketIOClient client, CommandPacket commandPacket, AckRequest ackRequest) throws Exception {
