@@ -85,17 +85,20 @@ function renderPlayers(playerMap) {
             } else { // this player exists!! find existing sprite and edit that
                 var existingSprite = players[key];
                
-                console.log('local seq: ' + existingSprite.getSeq() + ' server seq: ' + playerMap[key].sequence);
+                //console.log('local seq: ' + existingSprite.getSeq() + ' server seq: ' + playerMap[key].sequence);
                 if ((existingSprite.getSeq() == playerMap[key].sequence) && (existingSprite.getControls().length < 1) && (((new Date).getTime() - existingSprite.last_action) > 700)) {
-                    console.log('WARNING WARNING WARNING WARNING');
+                    //console.log('WARNING WARNING WARNING WARNING');
                     // at this point, the client has nothing left to process,
                     // set position to server. Unless they are hacking, this
                     // should be FINE!
                     existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
                 } else if (playerMap[key].sequence > existingSprite.getSeq()) {
-                    command = { x: playerMap[key].x, y: playerMap[key].y, sequence: playerMap[key].sequence,
-                        direction: playerMap[key].direction, directionTex: choosePlayerSprite(playerMap[key].direction) };
-                    existingSprite.addCommand(command);
+                    existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
+
+                    existingSprite.setDirection(playerMap[key].direction, choosePlayerSprite(playerMap[key].direction));
+                    //command = { x: playerMap[key].x, y: playerMap[key].y, sequence: playerMap[key].sequence,
+                    //    direction: playerMap[key].direction, directionTex: choosePlayerSprite(playerMap[key].direction) };
+                    //existingSprite.addCommand(command);
                 }
                 // this is old simple logic that doesn't do any interpolating
                 // existingSprite.setPixiTexture(choosePlayerSprite(playerMap[key].direction));

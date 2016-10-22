@@ -44,6 +44,11 @@ class PlayerSprite {
         this.pixiSprite.texture = newTexture;
     }
 
+    setDirection(direction, directionSprite) {
+        this.setPixiTexture(directionSprite);
+        this.direction = direction;
+    }
+
     setNewPosition(newX, newY) {
         this.pixiSprite.x = newX * this.tileSize;
         this.pixiSprite.y = newY * this.tileSize;
@@ -72,8 +77,8 @@ class PlayerSprite {
         //console.log('there is something legit to process');
         var nextControl = this.controlArray[0];
         //console.log(nextControl);
-        var toX = nextControl.x * this.tileSize;
-        var toY = nextControl.y * this.tileSize;
+        var toX = (this.x + nextControl.x) * this.tileSize;
+        var toY = (this.y + nextControl.y) * this.tileSize;
 
         var diffX = toX - this.pixiSprite.x;
         var diffY = toY - this.pixiSprite.y;
@@ -104,10 +109,10 @@ class PlayerSprite {
         this.pixiSprite.texture = nextControl.directionTex;
         this.direction = nextControl.direction;
 
-        if (this.pixiSprite.x == (nextControl.x * this.tileSize) &&
-                this.pixiSprite.y == (nextControl.y * this.tileSize)) {
-            this.x = nextControl.x;
-            this.y = nextControl.y;
+        if (this.pixiSprite.x == ((this.x +nextControl.x) * this.tileSize) &&
+                this.pixiSprite.y == ((this.y + nextControl.y) * this.tileSize)) {
+            this.x += nextControl.x;
+            this.y += nextControl.y;
             this.controlArray.shift();
             this.last_action = (new Date).getTime();
         }

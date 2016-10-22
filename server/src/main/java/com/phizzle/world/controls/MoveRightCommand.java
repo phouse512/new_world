@@ -32,8 +32,7 @@ public class MoveRightCommand implements Command {
         if (currChar.direction != CharacterDirection.EAST) {
             currChar.direction = CharacterDirection.EAST;
 
-            if (this.sequence > currChar.sequence)
-                currChar.sequence = this.sequence;
+            currChar.sequence = this.sequence;
             return;
         }
 
@@ -58,8 +57,7 @@ public class MoveRightCommand implements Command {
 
         currChar.x = potX;
         currChar.y = potY;
-        if (this.sequence > currChar.sequence)
-            currChar.sequence = this.sequence;
+        currChar.sequence = this.sequence;
         String newKey = World.getHashKey(potX, potY);
         locationMap.remove(oldKey);
         locationMap.put(newKey, player);

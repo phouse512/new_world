@@ -30,8 +30,7 @@ public class MoveUpCommand implements Command {
         if (currChar.direction != CharacterDirection.NORTH) {
             currChar.direction = CharacterDirection.NORTH;
 
-            if (this.sequence > currChar.sequence)
-                currChar.sequence = this.sequence;
+            currChar.sequence = this.sequence;
 
             return;
         }
@@ -57,8 +56,7 @@ public class MoveUpCommand implements Command {
 
         currChar.x = potX;
         currChar.y = potY;
-        if (this.sequence > currChar.sequence)
-            currChar.sequence = this.sequence;
+        currChar.sequence = this.sequence;
         String newKey = World.getHashKey(potX, potY);
         locationMap.remove(oldKey);
         locationMap.put(newKey, player);
