@@ -70,7 +70,7 @@ class PlayerSprite {
 
     // this method should be used to generate the x/y pixel coordinates as well
     // as which frame should be used
-    processTick() {
+    processTick(delta) {
         if (this.controlArray.length < 1) {
             return;
         }
@@ -85,8 +85,9 @@ class PlayerSprite {
 
         var xDelta = 0;
         var yDelta = 0;
-
-        var changeSize = 2;
+//        console.log(delta);
+//        console.log(Math.floor(delta/16));
+        var changeSize = 2 * Math.floor(delta/16);
 
         if (diffX > 0) {
             xDelta += changeSize;

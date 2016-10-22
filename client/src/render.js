@@ -170,18 +170,47 @@ function renderGameState(mapObj) {
     }
 }
 
-function animate() {
-    requestAnimationFrame(animate);
+var startingTime;
+var lastTime;
+var dt;
+var timestep = 1000/ 30;
+
+function animate(currentTime) {
+    if(!lastTime) { lastTime = currentTime; }
+    delta = currentTime - lastTime;
+    lastTime = currentTime;
 
     for (var key in players) {
         if (players.hasOwnProperty(key)) {
-            players[key].processTick();
+            players[key].processTick(delta);
         }
     }
     renderer.render(stage);
+    
+    requestAnimationFrame(animate);
+
+}
+
+// this method takes an x and y input and returns a boolean
+//   true for valid, false if an object may not be placed there
+function isValid(x, y) {
+    // check for other players
+    for (var key in players) {
+        if (players[key].x == x && players[key].y == y) {
+            return false;
+        }
+    }
+
+    // check for map boundaries
+    if (x < 0 || x >= constants.width || y < 0 || y >= constants.height) {
+        return false;
+    }
+
+    return true;
 }
 
 module.exports = {
+    isValid: isValid,
     setup: initializePIXI,
     setupMap: setupMap,
     sprites: setupSprites,

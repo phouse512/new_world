@@ -17,6 +17,9 @@ function keyboardPress(event) {
         if (currentPlayer.direction != 'EAST') {
             new_command = { x: 0, y: 0, direction: 'EAST', sequence: currentPlayer.sequence };
         } else {
+            if (!render.isValid(currentPlayer.x+1, currentPlayer.y)) {
+                return; 
+            }
             new_command = { x: 1, y: 0, direction: 'EAST', sequence: currentPlayer.sequence };
         }
         new_command.directionTex = render.choosePlayerSprite('EAST');
@@ -27,6 +30,9 @@ function keyboardPress(event) {
         if (currentPlayer.direction != 'NORTH') {
             new_command = { x: 0, y: 0, direction: 'NORTH', sequence: currentPlayer.sequence };
         } else {
+            if (!render.isValid(currentPlayer.x, currentPlayer.y-1)) {
+                return; 
+            }
             new_command = { x: 0, y: -1, direction: 'NORTH', sequence: currentPlayer.sequence };
         }
         new_command.directionTex = render.choosePlayerSprite('NORTH');
@@ -37,6 +43,9 @@ function keyboardPress(event) {
         if (currentPlayer.direction != 'WEST') {
             new_command = { x: 0, y: 0, direction: 'WEST', sequence: currentPlayer.sequence };
         } else {
+            if (!render.isValid(currentPlayer.x-1, currentPlayer.y)) {
+                return; 
+            }
             new_command = { x: -1, y: 0, direction: 'WEST', sequence: currentPlayer.sequence };
         }
         new_command.directionTex = render.choosePlayerSprite('WEST');
@@ -47,6 +56,9 @@ function keyboardPress(event) {
         if (currentPlayer.direction != 'SOUTH') {
             new_command = { x: 0, y: 0, direction: 'SOUTH', sequence: currentPlayer.sequence };
         } else {
+            if (!render.isValid(currentPlayer.x, currentPlayer.y+1)) {
+                return; 
+            }
             new_command = { x: 0, y: 1, direction: 'SOUTH', sequence: currentPlayer.sequence };
         }
         new_command.directionTex = render.choosePlayerSprite('SOUTH');
