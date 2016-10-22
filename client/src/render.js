@@ -93,12 +93,15 @@ function renderPlayers(playerMap) {
                     // should be FINE!
                     existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
                 } else if (playerMap[key].sequence > existingSprite.getSeq()) {
-                    existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
+                    //existingSprite.setNewPosition(playerMap[key].x, playerMap[key].y);
 
-                    existingSprite.setDirection(playerMap[key].direction, choosePlayerSprite(playerMap[key].direction));
-                    //command = { x: playerMap[key].x, y: playerMap[key].y, sequence: playerMap[key].sequence,
-                    //    direction: playerMap[key].direction, directionTex: choosePlayerSprite(playerMap[key].direction) };
-                    //existingSprite.addCommand(command);
+                    //existingSprite.setDirection(playerMap[key].direction, choosePlayerSprite(playerMap[key].direction));
+                    // work on looping through and generating diffs
+                    var done = false;
+                    diffX = playerMap[key].x - existingSprite.x;
+                    diffY = playerMap[key].y - existingSprite.y;
+
+                    existingSprite.addCommand({ x: diffX, y: diffY, direction: playerMap[key].direction, directionTex: choosePlayerSprite(playerMap[key].direction) });
                 }
                 // this is old simple logic that doesn't do any interpolating
                 // existingSprite.setPixiTexture(choosePlayerSprite(playerMap[key].direction));
