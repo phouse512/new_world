@@ -88,7 +88,10 @@ function renderPlayers(playerMap) {
             if(!(key in players)) {
                 // this is a new player!!
                 // add new pixi player sprite
+                var textSprite = new PIXI.Text(playerMap[key].name, {fontFamily: 'Arial', fontSize: 10, fill: '#000000', align: 'center'});
                 var tempSprite = new PIXI.Sprite(choosePlayerSprite(playerMap[key].direction));
+                tempSprite.addChild(textSprite);
+                textSprite.y -= 15;
                 var newSprite = new PlayerSprite(playerMap[key].x, playerMap[key].y, constants.tileSize,
                         tempSprite, playerMap[key].direction);
 

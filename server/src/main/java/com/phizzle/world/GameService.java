@@ -86,7 +86,7 @@ public class GameService extends AbstractExecutionThreadService {
             }
         });
 
-        final long timestep = 200;
+        final long timestep = 150;
         long startTime = System.currentTimeMillis();
         long lag = 0;
 

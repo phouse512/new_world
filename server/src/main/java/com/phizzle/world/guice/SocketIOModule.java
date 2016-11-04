@@ -20,7 +20,7 @@ public class SocketIOModule extends AbstractModule {
     public SocketIOServer getSocketIOServer() {
         Configuration config = new Configuration();
         config.setHostname("localhost");
-        config.setOrigin("http://127.0.0.1");
+        config.setOrigin("http://127.0.0.1:3000");
         config.setPort(9092);
         SocketConfig socketConfig = new SocketConfig();
         socketConfig.setReuseAddress(true);
