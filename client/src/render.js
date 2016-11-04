@@ -24,6 +24,8 @@ var FacingRightTex = PIXI.Texture.fromImage("assets/right.png");
 var selectLock = false;
 var SelectTex = PIXI.Texture.fromImage("assets/frame.png");
 
+var TilledTex = PIXI.Texture.fromImage("assets/tilled.png");
+
 var selectSprite = null;
 var mapTiles = null;
 var players = {};
@@ -35,6 +37,14 @@ function initializePIXI() {
 
     stage = new PIXI.Container();
     renderer.render(stage);
+}
+
+function updateTiles() {
+    for (var y = 0; y < constants.height; y++) {
+        for (var x = 0; x < constants.width; x++) {
+            
+        }
+    }
 }
     
 function setupMap(map) {
@@ -65,6 +75,8 @@ function setupMap(map) {
     $("#gameCanvas").on('click', function() {
         selectLock = !selectLock;
     });
+
+    tileInterval = setInterval(updateTiles, 500);
 }
 
 function setupSprites() {
@@ -180,6 +192,16 @@ function renderGameState(mapObj) {
              
             if (x == 0 && y == 0) { // top left
                 mapTiles[y][x].texture = TopLeftTexture;
+            }
+
+            // TILLED LOGIC
+            if (mapObj[y][x].tilled) {
+                if (mapTiles[y][x].children.length < 1) {
+                    tillSprite = new PIXI.Sprite(TilledTex);
+                    tillSprite.scale.x = 1;
+                    tillSprite.scale.y = 1;
+                    mapTiles[y][x].addChild(tillSprite);
+                }
             }
         }
     }

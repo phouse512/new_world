@@ -18,7 +18,11 @@ public class SoilTile implements Tile{
         this.y = y;
         this.moisture = 0.0;
         this.nutrients = 0.0;
-        this.tilled = false;
+        if (x < 3) {
+            this.tilled = true;
+        } else {
+            this.tilled = false;
+        }
     }
 
     public Integer getX() { return x; }
