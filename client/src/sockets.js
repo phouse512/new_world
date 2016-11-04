@@ -6,5 +6,6 @@ var socketSetup = function() {
 };
 
 module.exports = {
-    setup: socketSetup
+    setup: socketSetup,
+    socket: socket
 };

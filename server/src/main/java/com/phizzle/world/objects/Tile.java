@@ -8,30 +8,11 @@ import java.util.Optional;
 /**
  * Created by PhilipHouse on 10/12/16.
  */
-public class Tile {
+public interface Tile {
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    public Integer getX();
 
-    private Integer x;
-    private Integer y;
-    private Integer tile;
+    public Integer getY();
 
-    public Tile(Integer x, Integer y) {
-        this.x = x;
-        this.y = y;
-        this.tile = 0;
-    }
-
-
-    public Integer getX() {
-        return this.x;
-    }
-
-    public Integer getY() {
-        return this.y;
-    }
-
-    public Integer getTile() {
-        return this.tile;
-    }
+    public Integer getTile();
 }

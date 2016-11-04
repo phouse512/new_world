@@ -17,7 +17,7 @@ public class World {
         map = new Tile[height][width];
         for (int y=0; y<map.length; y++) {
             for (int x=0; x<map[y].length; x++) {
-                map[y][x] = new Tile(x, y);
+                map[y][x] = new SoilTile(x, y);
             }
         }
     }

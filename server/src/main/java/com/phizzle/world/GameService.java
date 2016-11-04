@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.inject.Inject;
 import com.phizzle.world.controls.*;
+import com.phizzle.world.network.ChatPacket;
 import com.phizzle.world.network.CommandPacket;
 import com.phizzle.world.network.DataPacket;
 import com.phizzle.world.objects.*;
@@ -86,6 +87,17 @@ public class GameService extends AbstractExecutionThreadService {
             }
         });
 
+        socketServer.addEventListener("chat", ChatPacket.class, new DataListener<ChatPacket>() {
+            @Override
+            public void onData(SocketIOClient client, ChatPacket chatPacket, AckRequest ackRequest) throws Exception {
+                UUID currentId = client.getSessionId();
+                Character character = players.get(currentId);
+                chatPacket.name = character.name;
+
+                socketServer.getBroadcastOperations().sendEvent("serverChat", chatPacket);
+            }
+        });
+
         final long timestep = 150;
         long startTime = System.currentTimeMillis();
         long lag = 0;
@@ -100,7 +112,7 @@ public class GameService extends AbstractExecutionThreadService {
                 lag -= timestep;
                 System.out.println("F YEAH");
                 processInputs();
-                socketServer.getBroadcastOperations().sendEvent("chats",
+                socketServer.getBroadcastOperations().sendEvent("status",
                         new DataPacket(this.world, this.players).serialize());
             }
         }

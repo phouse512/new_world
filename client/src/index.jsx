@@ -1,6 +1,7 @@
 var $ = require('jquery');
 
 var socket = require('./sockets');
+var chat = require('./chat');
 var render = require('./render');
 var keyboard = require('./keyboard');
 var map = 0;
@@ -9,6 +10,7 @@ var playerSprites = {};
 
 $(document).ready(function() {
     var test = socket.setup();
+    chat.setup();
     render.setup();
     render.animate();
     keyboard.setupKeyboard(test);
@@ -22,7 +24,7 @@ $(document).ready(function() {
         console.log(players);
     });
 
-    test.on('chats', function(data) {
+    test.on('status', function(data) {
         JSON.parse(data);
         var temp = 0;
         try {

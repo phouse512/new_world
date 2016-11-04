@@ -1,7 +1,7 @@
 var PIXI = require('pixi.js');
 var constants = require('./constants');
-console.log('come on man');
 var PlayerSprite = require('./sprite.jsx');
+var $ = require('jquery');
 
 // pixi global variables
 var stage = null;
@@ -21,17 +21,20 @@ var FacingLeftTex = PIXI.Texture.fromImage("assets/left.png");
 var FacingUpTex = PIXI.Texture.fromImage("assets/up.png");
 var FacingRightTex = PIXI.Texture.fromImage("assets/right.png");
 
+var selectLock = false;
+var SelectTex = PIXI.Texture.fromImage("assets/frame.png");
+
+var selectSprite = null;
 var mapTiles = null;
 var players = {};
 
 function initializePIXI() {
+    var canvas = document.getElementById("gameCanvas");
     renderer = PIXI.autoDetectRenderer(constants.tileSize * constants.width,
-            constants.tileSize * constants.height);
-    document.body.appendChild(renderer.view);
+            constants.tileSize * constants.height, { view: canvas });
 
     stage = new PIXI.Container();
     renderer.render(stage);
-
 }
     
 function setupMap(map) {
@@ -49,10 +52,19 @@ function setupMap(map) {
             mapTiles[y][x] = tempSprite;
         }
     }
+    
+    // SETUP SELECTOR HEADER
+    selectSprite = new PIXI.Sprite(SelectTex);
+    selectSprite.scale.x = 1;
+    selectSprite.scale.y = 1;
+    selectSprite.x = 0;
+    selectSprite.y = 0;
+    stage.addChild(selectSprite);
 
-    console.log(mapTiles);
-    console.log('height: ' + mapTiles.length);
-    console.log('width: ' + mapTiles[0].length);
+    // ADD EVENT LISTENER FOR SELECTING A SQUARE
+    $("#gameCanvas").on('click', function() {
+        selectLock = !selectLock;
+    });
 }
 
 function setupSprites() {
@@ -88,7 +100,7 @@ function renderPlayers(playerMap) {
             if(!(key in players)) {
                 // this is a new player!!
                 // add new pixi player sprite
-                var textSprite = new PIXI.Text(playerMap[key].name, {fontFamily: 'Arial', fontSize: 10, fill: '#000000', align: 'center'});
+                var textSprite = new PIXI.Text(playerMap[key].name, {fontFamily: 'Arial', fontSize: 10, fill: '#ffffff', align: 'center'});
                 var tempSprite = new PIXI.Sprite(choosePlayerSprite(playerMap[key].direction));
                 tempSprite.addChild(textSprite);
                 textSprite.y -= 15;
@@ -178,6 +190,22 @@ var lastTime;
 var dt;
 var timestep = 1000/ 30;
 
+function updateSelector() {
+    if (selectSprite == null || selectLock) {
+        return;
+    }
+    position = renderer.plugins.interaction.mouse.global;
+
+    x = position.x;
+    y = position.y;
+
+    xDiff = x % constants.tileSize;
+    yDiff = y % constants.tileSize;
+
+    selectSprite.x = x - xDiff;
+    selectSprite.y = y - yDiff;
+}
+
 function animate(currentTime) {
     if(!lastTime) { lastTime = currentTime; }
     delta = currentTime - lastTime;
@@ -188,6 +216,7 @@ function animate(currentTime) {
             players[key].processTick(delta);
         }
     }
+    updateSelector();
     renderer.render(stage);
     
     requestAnimationFrame(animate);
