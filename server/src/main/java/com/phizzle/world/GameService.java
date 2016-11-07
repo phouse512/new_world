@@ -34,7 +34,7 @@ public class GameService extends AbstractExecutionThreadService {
     @Inject
     public GameService(SocketIOServer socketIOServer) {
         this.socketServer = socketIOServer;
-        this.world = new World(20, 40);
+        this.world = new World(20, 30);
 
         this.players = new HashMap<>();
         this.locationHash = new HashMap<>();
@@ -110,10 +110,9 @@ public class GameService extends AbstractExecutionThreadService {
 
             while(lag >= timestep) {
                 lag -= timestep;
-                System.out.println("F YEAH");
+                System.out.println("server tick");
                 processInputs();
-                socketServer.getBroadcastOperations().sendEvent("status",
-                        new DataPacket(this.world, this.players).serialize());
+                updateAllPlayers();
             }
         }
     }
@@ -165,6 +164,13 @@ public class GameService extends AbstractExecutionThreadService {
             i = i+1;
         }
         return choice;
+    }
+
+    private void updateAllPlayers() {
+        for (HashMap.Entry<UUID, Character> player : players.entrySet()) {
+            socketServer.getClient(player.getKey()).sendEvent("status",
+                    new DataPacket(this.world, this.players).serialize());
+        }
     }
 
     protected void startUp() {

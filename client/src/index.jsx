@@ -25,10 +25,10 @@ $(document).ready(function() {
     });
 
     test.on('status', function(data) {
-        JSON.parse(data);
         var temp = 0;
         try {
             temp = JSON.parse(data);
+//            console.log(temp);
         } catch(err) {
             console.log("failure to deserialize: " + err);
             console.log(err.line);

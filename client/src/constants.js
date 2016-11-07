@@ -1,5 +1,5 @@
 module.exports = {
     tileSize: 30,
-    width: 40,
+    width: 30,
     height: 20
 }

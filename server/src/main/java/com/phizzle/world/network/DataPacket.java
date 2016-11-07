@@ -13,6 +13,9 @@ import java.util.UUID;
  */
 public class DataPacket {
 
+
+    // TODO: add a MIXIN to ignore serialization of inventory and other extraneous char
+    // data, as talked about here: http://stackoverflow.com/questions/7421474/how-can-i-tell-jackson-to-ignore-a-property-for-which-i-dont-have-control-over
     private static ObjectMapper mapper = new ObjectMapper();
 
     private final World world;

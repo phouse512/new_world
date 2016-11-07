@@ -21,7 +21,6 @@ public class MoveDownCommand implements Command {
                         HashMap<String, UUID> locationMap,
                         UUID player) {
         // for now assume, you can always move right
-        System.out.println("let's go");
         Character currChar = playerMap.get(player);
         Integer currX = currChar.x;
         Integer currY = currChar.y;
